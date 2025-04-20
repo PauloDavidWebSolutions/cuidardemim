@@ -28,8 +28,38 @@ interface BookingFormProps {
 
 type Animate = 'none' | 'next' | 'back'
 
+async function getExistingBookings(serviceSlug: string, providerUsername: string, apiKey: string) {
+  // Fetch bookings from your API or DB
+  const bookingId = getBookingIdFromServiceAndProvider(serviceSlug, providerUsername);
+  const options = {
+    method: 'GET',
+  };
+
+  // Adjust the URL based on how you want to fetch bookings by ID
+  const url = `https://api.cal.com/v1/bookings/${bookingId}?apiKey=${apiKey}`;
+
+  try {
+    const response = await fetch(url, options);
+    const bookings = await response.json();
+    console.log('Bookings received:', bookings); // Log bookings for debugging
+    return bookings;
+  } catch (err) {
+    console.error('Error fetching bookings:', err);
+    return []; // Return empty array in case of error
+  }
+}
+
+function getBookingIdFromServiceAndProvider(serviceSlug: string, providerUsername: string) {
+  // This is a placeholder. You need to define the logic for mapping the serviceSlug and providerUsername to an actual booking ID
+  // For now, we are assuming the ID comes from these parameters. Adjust accordingly to your actual setup.
+  return `${serviceSlug}-${providerUsername}`; // This is just an example, replace with the correct logic
+}
+
 export default function BookingForm({ categories }: BookingFormProps) {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>()
+  const [existingBookings, setExistingBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const selectedCategory = categories.find(c => c.id === selectedCategoryId)
 
   useEffect(() => {
@@ -55,6 +85,35 @@ export default function BookingForm({ categories }: BookingFormProps) {
     p => p.id === selectedProviderId
   )
 
+
+
+  useEffect(() => {
+    async function fetchBookings() {
+      if (!selectedService || !selectedProvider) return;
+  
+      console.log('ServiceSlug:', selectedService.calEventSlug);
+      console.log('ProviderUsername:', selectedProvider.calUsername);
+  
+      setLoading(true);
+  
+      try {
+        const apiKey = process.env.CAL_API_KEY; // Replace with the actual API key
+        const bookings = await getExistingBookings(
+          selectedService.calEventSlug,
+          selectedProvider.calUsername,
+          apiKey
+        );
+        setExistingBookings(bookings);
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    fetchBookings();
+  }, [selectedService, selectedProvider]);
+
   const [animate, setAnimate] = useState<Animate>('none')
   const [currentStep, setCurrentStep] = useState(0)
 
@@ -67,6 +126,10 @@ export default function BookingForm({ categories }: BookingFormProps) {
     setAnimate('back')
     setTimeout(() => setCurrentStep(s => s - 1), 0)
   }
+
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <section>

@@ -41,34 +41,18 @@ export async function createNewServiceAction(data: NewServiceInputs) {
         'Content-Type': 'application/json'
       },
       params: {
-        apiKey: process.env.CAL_API_KEY
+        apiKey: process.env.CAL_API_KEY  // Make sure this is correct
       },
       data: {
-        title: name,
-        slug: slug,
+        title: name,  // Title of the event
+        slug: slug,  // Unique slug for the event
         length: length,
-        description: description,
-        teamId: Number(process.env.CAL_TEAM_ID),
-        schedulingType: 'MANAGED',
-        disableGuests: true,
-        successRedirectUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/book/success`,
-        locations: [
-          {
-            address: '1609 Bayview Ave ,Toronto ON M4G 3B5',
-            type: 'inPerson',
-            displayLocationPublicly: true
-          }
-        ],
-        metadata: {
-          managedEventConfig: {
-            unlockedFields: {
-              scheduleId: true,
-              destinationCalendar: true
-            }
-          }
-        }
+        description: description,  // Event duration in minutes
+        metadata: {}  // Pass empty object if no metadata
       }
     })
+
+    // console.log("Response from cal.com:", response.data);
 
     if (response.status !== 200) {
       throw new Error('Error creating service')

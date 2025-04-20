@@ -11,7 +11,7 @@ interface ServiceProps {
 
 export default function Services({ services }: ServiceProps) {
   return (
-    <ul className='mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5'>
+    <ul className='mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 min-h-[200px]'>
       {services.map(service => (
         <li
           key={service.id}

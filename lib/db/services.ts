@@ -1,7 +1,7 @@
 import prisma from '@/lib/db/prisma'
 
 export async function getServices(limit?: number) {
-  return await prisma.service.findMany({
+  const services = await prisma.service.findMany({
     include: {
       category: true,
       duration: true
@@ -9,6 +9,8 @@ export async function getServices(limit?: number) {
     orderBy: { name: 'asc' },
     ...(limit ? { take: limit } : {})
   })
+
+  return services
 }
 
 export async function getServiceBySlug(slug: string) {

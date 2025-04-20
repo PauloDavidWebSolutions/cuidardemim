@@ -6,6 +6,7 @@ import { getTeam } from '@/lib/db/team'
 
 export default async function NewService() {
   const categories = await getCategories()
+  // console.log('Categories:', categories)
   const durations = await getDurations()
   const team = await getTeam()
 

@@ -6,7 +6,7 @@ import { UpdateUser, createUser } from '@/lib/db/users'
 import { revalidatePath } from 'next/cache'
 
 export async function POST(req: Request) {
-  const WEBHOOK_SECRET = process.env.CLERK_SECRET_KEY
+  const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
 
   if (!WEBHOOK_SECRET) {
     throw new Error(
@@ -19,6 +19,7 @@ export async function POST(req: Request) {
   const svix_id = headerPayload.get('svix-id')
   const svix_timestamp = headerPayload.get('svix-timestamp')
   const svix_signature = headerPayload.get('svix-signature')
+
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
       'svix-signature': svix_signature
     }) as WebhookEvent
   } catch (err) {
-    console.error('Error verifying webhook:', err)
+    console.error('Error verifying webhook:', err);
     return new Response('Error occurred', {
       status: 400
     })
@@ -69,7 +70,8 @@ export async function POST(req: Request) {
     }
 
     const email = email_addresses[0].email_address
-    const phone = phone_numbers ? phone_numbers[0].phone_number : null
+    const phone = phone_numbers?.[0]?.phone_number ?? null
+
 
     const user = {
       clerkUserId: id,

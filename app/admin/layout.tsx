@@ -30,6 +30,7 @@ export default function AdminDashboard({
           <NavLink href='/admin/products'>Products</NavLink>
           <NavLink href='/admin/services'>Services</NavLink>
           <NavLink href='/admin/team'>Team</NavLink>
+          <NavLink href='/admin/categories'>Categories</NavLink>
         </nav>
         <Sheet>
           <SheetTrigger asChild>
@@ -57,6 +58,7 @@ export default function AdminDashboard({
               <NavLink href='/admin/products'>Products</NavLink>
               <NavLink href='/admin/services'>Services</NavLink>
               <NavLink href='/admin/team'>Team</NavLink>
+              <NavLink href='/admin/categories'>Categories</NavLink>
             </nav>
           </SheetContent>
         </Sheet>

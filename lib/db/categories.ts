@@ -2,11 +2,6 @@ import prisma from '@/lib/db/prisma'
 
 export async function getCategories() {
   return await prisma.category.findMany({
-    where: {
-      service: {
-        some: {}
-      }
-    },
     orderBy: {
       name: 'asc'
     },
@@ -22,6 +17,22 @@ export async function getCategories() {
           duration: true
         }
       }
+    }
+  })
+}
+
+
+// Function to create a new category
+export async function createCategory(data: {
+  name: string
+  description?: string
+  imageUrl?: string
+}) {
+  return await prisma.category.create({
+    data: {
+      name: data.name,
+      description: data.description || null,
+      imageUrl: data.imageUrl || null
     }
   })
 }
